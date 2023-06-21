@@ -237,6 +237,8 @@ class Store:
             print("2. Remove Customer")
             print("3. List Customer's")
             print("4. Gen Random Custumers")
+            print("5. Sequential Search")
+            print("6. Ordem Alfabética")
             # print("3. Place Order (NOT WORKING)")
             print("0. Exit")
 
@@ -259,6 +261,13 @@ class Store:
 
             elif choice == "4":
                 self.gen_random_costumers()
+
+            elif choice == "5":
+                cpf = int(input("INPUT CPF: "))
+                self.sequential_search_rom_cliente(filename_costumer,cpf)
+            
+            elif choice == "6":
+                self.sort_customers_by_name(filename_costumer)
 
             elif choice == "0":
                 break
@@ -360,5 +369,34 @@ class Store:
             # self.add_product(var_clientes)
             self.save_costumer_to_file(var_clientes, "costumer.csv")
 
-    
+    def sequential_search_rom_cliente(self, filename_costumer, code):
+        comp = 0
+        start_time = time.time()
+        found = False
+
+        for chunk in pd.read_csv(filename_costumer, chunksize=15):
+            comp += chunk.shape[0]
+            result = chunk[chunk['Costumer CPF'] == code]
+            if not result.empty:
+                found = True
+                elapsed_time = time.time() - start_time
+                print("Costumer CPF in", comp, "comparisons and", elapsed_time, "seconds:")
+                print()
+                print(result)
+                break
+
+        if not found:
+            elapsed_time = time.time() - start_time
+            print("Costumer CPF not found in the store.")
+
+        print()
+        print("Total comparisons:", comp)
+        print("Elapsed time:", elapsed_time, "seconds")
+
+    def sort_customers_by_name(self, filename_costumer):
+        df = pd.read_csv(filename_costumer)
+        df = df.sort_values(by=['Costumer Name'])
+        df.to_csv(filename_costumer, mode='w', index=False)
+
+
 ################################### implementação do objeto pedidos
