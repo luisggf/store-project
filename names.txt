@@ -1,0 +1,82 @@
+Castanets
+Handpan
+Hang
+Maraca
+Marimba
+Tambourine
+Triangle
+Vibraphone
+Xylophone
+Bass drum
+Drum
+Drum kit
+Pandeiro
+Pandero
+Accordion
+Ukulele
+Violin
+Keyboard
+Piano
+Eletric Guitar
+Guitar
+Flute
+Sax
+Violin Strings
+Guitar Strings
+Acoustic Guitar Strings
+Ukulele Strings
+Piano Strings
+Tuner
+Amplifier
+Pedal
+PedalBoard
+Cable P10
+Pick
+Flute
+Saxophone
+Trumpet
+Clarinet
+Trombone
+Cello
+Viola
+Harp
+Bagpipes
+Didgeridoo
+Banjo
+Mandolin
+Sitar
+Balalaika
+Harmonica
+Oboe
+Bassoon
+French horn
+Bongo
+Djembe
+Conga
+Tabla
+Accordion
+Bassoon
+Cowbell
+Glockenspiel
+Theremin
+Kazoo
+Harpsichord
+Mellotron
+Dulcimer
+Tamboura
+Sitar
+Kalimba
+Concertina
+Zither
+Steel drum
+Bamboo flute
+Jaw harp
+Ocarina
+Sousaphone
+Bouzouki
+Pan flute
+Shamisen
+Steel pan
+Hurdy-gurdy
+Koto
+Udu drum
