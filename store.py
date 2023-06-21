@@ -41,6 +41,7 @@ class Store:
         self.customers = []
         self.orders = []
 
+    # adiciona produto no dicionario products_list, uso de ram
     def add_product(self, product):
         if any(prod.name == product.name for prod in self.products_list):
             print(f"Product '{product.name}' already exists in the store.")
@@ -48,6 +49,7 @@ class Store:
             self.products_list.append(product)
             print(f"Product '{product.name}' added to the store.")
 
+    # remove produto no dicionario products_list, uso de ram
     def remove_product(self, name):
         for product in self.products_list:
             if product.name == name:
@@ -56,11 +58,13 @@ class Store:
                 return
         print(f"Product '{name}' does not exist in the store.")
 
+    # imprime todos produtos da lista, uso de ram
     def print_products(self):
         print("Products in the store:")
         for product in self.products_list:
             print(f"Name: {product.name}, Code: {product.code}, Quantity: {product.quantity}, Price: {product.price}")
 
+    # le o arquivo filename passado por parametro em chunks (pedaços de 30), uso de rom
     def read_file(self, filename):
         try:
             chunk_size = 30  # Define o tamanho do chunk desejado
@@ -71,13 +75,7 @@ class Store:
         except FileNotFoundError:
             print(f"File '{filename}' not found.")
 
-    def get_product_code(self, register):
-        for line in register.split('\n'):
-            if line.startswith("Product Code:"):
-                product_code = int(line.split(":")[1].strip())
-                return product_code
-        return 0
-
+    # salva um produto passado como parametro no arquivo
     def save_product_to_file(self, product, filename):
         data = {
             "Product Name": [product.name],
@@ -92,12 +90,15 @@ class Store:
             df.to_csv(filename, mode='a', index=False)
         print(f"Product '{product.name}' saved to '{filename}' successfully.")
 
+    # remove um produto passado por parametro baseado em código de produto, no arquivo
     def remove_product_from_file(self, filename, code):
         df = pd.read_csv(filename)
         df = df[df['Product Code'] != code]
         df.to_csv(filename, index=False)
         print(f"Product '{code}' removed from '{filename}' successfully.")
 
+    # realiza a busca sequencial de um codigo de produto no arquivo, retornando tempo gasto 
+    # numero de comparações
     def sequential_search_rom(self, filename, code):
         comp = 0
         start_time = time.time()
@@ -120,6 +121,8 @@ class Store:
         print("Total comparisons:", comp)
         print("Elapsed time:", elapsed_time, "seconds")
 
+
+    # ordena produtos de arquivo por codigo de produto
     def sort_products_by_code(self, filename):
         df = pd.read_csv(filename)
         df = df.sort_values(by=['Product Code'])
@@ -134,6 +137,7 @@ class Store:
         df = df.sample(frac=1).reset_index(drop=True)
         df.to_csv(filename, mode='w', index=False)
 
+    # gera len(names.txt) instrumentos (produtos) [geração de dados]
     def gen_random_instruments(self):
         code = 0
         with open('names.txt', 'r') as file:
@@ -148,6 +152,7 @@ class Store:
             code += 1
             self.save_product_to_file(var_product, "products.csv")
 
+    # particiona o arquivo maior em arquivos menores de forma ordenada
     def sorted_partition_creation_ROM(self, filename, chunk_size):
         partition_counter = 1
         partitions = []
@@ -169,6 +174,7 @@ class Store:
             pd.DataFrame(chunk).to_csv(partition_filename, index=False)
         return partitions
 
+    # menu de manutenção dos produtos para maior acessibilidade para o usuario
     def menu_product(self, filename):
         while True:
             print("\n=== PRODUCT MENU ===")
@@ -223,6 +229,7 @@ class Store:
             else:
                 print("Invalid choice. Please try again.")
 
+    # menu de manutenção dos clientes para maior acessibilidade para o usuario
     def menu_customer(self, filename_costumer):
         while True:
             print("\n=== CUSTOMER MENU ===")
@@ -259,6 +266,7 @@ class Store:
             else:
                 print("Invalid choice. Please try again.")
 
+    # menu geral que engloba menus de pedidos, produtos e clientes, além de informações da loja
     def main_menu(self):
         while True:
             print("\n=== MAIN MENU ===")
@@ -281,8 +289,9 @@ class Store:
                 print("Invalid choice. Please try again.")
 
 
-###################################
+################################### funções relacionadas ao objeto cliente
 
+    # salva cliente no arquivo de clientes
     def save_costumer_to_file(self, costumer, filename_costumer):
         data = {
             "Costumer Name": [costumer.name],
@@ -297,7 +306,7 @@ class Store:
             df.to_csv(filename_costumer, mode='a', index=False)
         print(f"Product '{costumer.name}' saved to '{filename_costumer}' successfully.")
 
-
+    # le arquivo de clientes, os imprimindo na tela
     def read_file_costumer(self, filename_costumer):
         try:
             chunk_size = 30  # Define o tamanho do chunk desejado
@@ -308,12 +317,15 @@ class Store:
         except FileNotFoundError:
             print(f"File '{filename_costumer}' not found.")
 
+    # remove cliente do arquivo baseado em cpf
     def remove_costumer_from_file(self, filename_costumer, cpf):
         df = pd.read_csv(filename_costumer)
         df = df[df['Costumer CPF'] != cpf]
         df.to_csv(filename_costumer, index=False)
         print(f"Costumer '{cpf}' removed from '{filename_costumer}' successfully.")
 
+
+    # realiza pedido de dado cliente
     def place_order(self, customer_cpf):
         customer = self.find_customer_by_cpf(customer_cpf)
         if customer:
@@ -334,9 +346,7 @@ class Store:
         else:
             print("Customer not found.")
 
-    def teste():
-        pass
-
+    # gera um numero 'len(costumer_names.txt)' de clientes para a loja [criação de dados]
     def gen_random_costumers(self):
         with open('custumer_names.txt', 'r', encoding="utf-8") as file:
             content = file.readlines()
@@ -351,3 +361,4 @@ class Store:
             self.save_costumer_to_file(var_clientes, "costumer.csv")
 
     
+################################### implementação do objeto pedidos
