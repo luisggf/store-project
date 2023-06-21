@@ -239,6 +239,7 @@ class Store:
             print("4. Gen Random Custumers")
             print("5. Sequential Search")
             print("6. Ordem Alfabética")
+            print("7. Shuffle")
             # print("3. Place Order (NOT WORKING)")
             print("0. Exit")
 
@@ -268,6 +269,9 @@ class Store:
             
             elif choice == "6":
                 self.sort_customers_by_name(filename_costumer)
+
+            elif choice == "7":
+                self.shuffle_file(filename_costumer)
 
             elif choice == "0":
                 break
@@ -397,6 +401,9 @@ class Store:
         df = pd.read_csv(filename_costumer)
         df = df.sort_values(by=['Costumer Name'])
         df.to_csv(filename_costumer, mode='w', index=False)
+
+        
+    
 
 
 ################################### implementação do objeto pedidos
