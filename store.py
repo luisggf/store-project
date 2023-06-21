@@ -334,6 +334,9 @@ class Store:
         else:
             print("Customer not found.")
 
+    def teste():
+        pass
+
     def gen_random_costumers(self):
         with open('custumer_names.txt', 'r', encoding="utf-8") as file:
             content = file.readlines()
