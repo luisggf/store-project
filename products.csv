@@ -22,8 +22,8 @@ Cowbell,20,1,479.67
 Djembe,21,6,107.24
 Ukulele Strings,22,11,851.06
 Bamboo flute,23,9,757.0
-thales,24,25,0.0
 Bouzouki,24,17,27.98
+thales,24,25,0.0
 Conga,25,4,410.61
 Glockenspiel,26,15,805.46
 PedalBoard,27,5,714.66
@@ -81,3 +81,6 @@ Bassoon,78,19,645.33
 Udu drum,79,9,852.79
 Kalimba,80,7,300.15
 Accordion,81,1,641.67
+Acoustic Guitar Strings,3,4,186.76
+Pandero,4,1,791.78
+Memphis,0,0,999.9

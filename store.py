@@ -28,18 +28,12 @@ class Store:
             cpf = input("Enter customer CPF: ")
             return Store.Customer(name, cep, phone, cpf)
 
-    class Order:
-        def __init__(self, order_number, product, quantity, total_value, customer):
-            self.order_number = order_number
-            self.product = product
-            self.quantity = quantity
-            self.total_value = total_value
-            self.customer = customer
 
     def __init__(self):
         self.products_list = []
         self.customers = []
         self.orders = []
+        self.balance = 0.0
 
     # adiciona produto no dicionario products_list, uso de ram
     def add_product(self, product):
@@ -103,7 +97,7 @@ class Store:
         comp = 0
         start_time = time.time()
         found = False
-
+        # prod_aux = self.Product()
         for chunk in pd.read_csv(filename, chunksize=15):
             comp += chunk.shape[0]
             result = chunk[chunk['Product Code'] == code]
@@ -112,6 +106,7 @@ class Store:
                 elapsed_time = time.time() - start_time
                 print("Product found in", comp, "comparisons and", elapsed_time, "seconds:")
                 print(result)
+                return result
                 break
 
         if not found:
@@ -229,6 +224,25 @@ class Store:
             else:
                 print("Invalid choice. Please try again.")
 
+    def menu_order(self, filename_order):
+        while True:
+            print("\n=== CUSTOMER MENU ===")
+            print("1. Add pedido")
+            print("0. Exit")
+
+            choice = input("Enter your choice: ")
+
+            if choice == "1":
+                codigo_prod = int(input("Digite o codigo do produto: "))
+                cliente_CPF = int(input("Digite o CPF do cliente: "))
+                quantity = int(input("Digite a quantidade: "))
+                self.place_orderr(filename_order,codigo_prod,cliente_CPF,quantity)
+
+            elif choice == "0":
+                break
+
+            else:
+                print("Invalid choice. Please try again.")
     # menu de manutenção dos clientes para maior acessibilidade para o usuario
     def menu_customer(self, filename_costumer):
         while True:
@@ -285,6 +299,7 @@ class Store:
             print("\n=== MAIN MENU ===")
             print("1. Product Menu")
             print("2. Customer Menu")
+            print("3. Order Menu")
             print("0. Exit")
 
             choice = input("Enter your choice: ")
@@ -294,6 +309,9 @@ class Store:
 
             elif choice == "2":
                 self.menu_customer("costumer.csv")
+
+            elif choice == "3":
+                self.menu_order("order.csv")
 
             elif choice == "0":
                 break
@@ -339,25 +357,25 @@ class Store:
 
 
     # realiza pedido de dado cliente
-    def place_order(self, customer_cpf):
-        customer = self.find_customer_by_cpf(customer_cpf)
-        if customer:
-            order = self.Order(customer)
-            while True:
-                customer_cpf = int(input("Enter costumer code to add to order (or 0 to finish): "))
-                if customer_cpf == 0:
-                    break
-                costumer = self.find_costumer_by_cpf(customer_cpf)
-                if costumer:
-                    quantity = int(input("Enter costumer quantity: "))
-                    order.add_product(costumer, quantity)
-                    print("Product added to order successfully.")
-                else:
-                    print("Product not found.")
-            self.orders.append(order)
-            print("Order placed successfully.")
-        else:
-            print("Customer not found.")
+    # def place_order(self, customer_cpf):
+    #     customer = self.find_customer_by_cpf(customer_cpf)
+    #     if customer:
+    #         order = self.Order(customer)
+    #         while True:
+    #             customer_cpf = int(input("Enter costumer code to add to order (or 0 to finish): "))
+    #             if customer_cpf == 0:
+    #                 break
+    #             costumer = self.find_costumer_by_cpf(customer_cpf)
+    #             if costumer:
+    #                 quantity = int(input("Enter costumer quantity: "))
+    #                 order.add_product(costumer, quantity)
+    #                 print("Product added to order successfully.")
+    #             else:
+    #                 print("Product not found.")
+    #         self.orders.append(order)
+    #         print("Order placed successfully.")
+    #     else:
+    #         print("Customer not found.")
 
     # gera um numero 'len(costumer_names.txt)' de clientes para a loja [criação de dados]
     def gen_random_costumers(self):
@@ -387,6 +405,7 @@ class Store:
                 print("Costumer CPF in", comp, "comparisons and", elapsed_time, "seconds:")
                 print()
                 print(result)
+                return result
                 break
 
         if not found:
@@ -402,8 +421,81 @@ class Store:
         df = df.sort_values(by=['Costumer Name'])
         df.to_csv(filename_costumer, mode='w', index=False)
 
+    def place_orderr(self, filename_pedidos, codigo_prod, cliente_CPF, quantity):
+        rand = random.randint(1, 1000)
+
+        P = self.find_product_by_code("products.csv", codigo_prod) 
+        C = self.find_customer_by_cpf("costumer.csv", cliente_CPF)  
         
+
+        if C == None:
+            print("Cliente nao encontrado")
+            return
+        if P == None:
+            print("Produto nao encontrado")
+            return
+        
+        expent = P.price * P.quantity
+        self.balance += expent
+
+        if P.quantity==0 or P.quantity < quantity:
+            print("SEM Unidades")
+            return
+        P.quantity -= quantity
+        self.save_product_to_file(P,"products.csv")
+
+        data = {
+            "Product Name": [P.name],
+            "Bought Quantity:": [quantity],
+            "Costumer Name": [C.name],
+            "Order Code": [rand],
+        }
+
+        df = pd.DataFrame(data)
+        if os.path.isfile(filename_pedidos):
+            df.to_csv(filename_pedidos, mode='a', index=False, header=False)
+        else:
+            df.to_csv(filename_pedidos, mode='a', index=False)
+        print(f"Order '{codigo_prod}' saved to '{filename_pedidos}' successfully.")
     
-
-
-################################### implementação do objeto pedidos
+    #achar cliente por CPF
+    def find_customer_by_cpf(self, filename, cpf, chunksize=1000):
+        # Abrir o arquivo CSV em partes menores (chunks)
+        for chunk in pd.read_csv(filename, chunksize=chunksize):
+            # Filtrar o chunk atual pelo CPF do cliente
+            customer_chunk = chunk[chunk['Costumer CPF'] == cpf]
+            
+            # Verificar se há clientes encontrados no chunk
+            if not customer_chunk.empty:
+                # Retornar o primeiro cliente encontrado
+                customer_row = customer_chunk.iloc[0]
+                return self.Customer(
+                    name=customer_row['Costumer Name'],
+                    cpf=customer_row['Costumer CPF'],
+                    cep=customer_row['Adress'],
+                    phone=customer_row['Number']
+                )
+        
+        # Se nenhum cliente for encontrado em todos os chunks
+        return None
+    
+    #achar produto por codigo
+    def find_product_by_code(self, filename, cod, chunksize=1000):
+        # Abrir o arquivo CSV em partes menores (chunks)
+        for chunk in pd.read_csv(filename, chunksize=chunksize):
+            # Filtrar o chunk atual pelo CPF do cliente
+            product_chunk = chunk[chunk['Product Code'] == cod]
+            # Verificar se há clientes encontrados no chunk
+            if not product_chunk.empty:
+                # Retornar o primeiro cliente encontrado
+                product_row = product_chunk.iloc[0]
+                return self.Product(
+                    name=product_row['Product Name'],
+                    code=product_row['Product Code'],
+                    quantity=product_row['Quantity'],
+                    price=product_row['Price']
+                )
+        
+        # Se nenhum cliente for encontrado em todos os chunks
+        return None
+    
