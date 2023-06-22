@@ -20,7 +20,7 @@ class Store:
             self.phone = phone
             self.cpf = cpf
 
-    @staticmethod
+    # facilitação para criar clientes (uso em place_order)
     def create_customer(self):
         name = input("Enter customer name: ")
         cep = input("Enter customer CEP: ")
@@ -29,6 +29,7 @@ class Store:
         return Store.Customer(name, cep, phone, cpf)
 
 
+    # possibilidade de execução em ram e contagem de saldo da loja
     def __init__(self):
         self.products_list = []
         self.customers = []
@@ -90,6 +91,7 @@ class Store:
         df = df[df['Product Code'] != code]
         df.to_csv(filename, index=False)
         print(f"Product '{code}' removed from '{filename}' successfully.")
+
 
     # realiza a busca sequencial de um codigo de produto no arquivo, retornando tempo gasto 
     # numero de comparações
@@ -224,6 +226,7 @@ class Store:
             else:
                 print("Invalid choice. Please try again.")
 
+    # menu interativo para realizar pedidos
     def menu_order(self, filename_order):
         while True:
             print("\n=== CUSTOMER MENU ===")
@@ -379,7 +382,8 @@ class Store:
             # self.add_product(var_clientes)
             self.save_costumer_to_file(var_clientes, "costumer.csv")
 
-    def sequential_search_rom_cliente(self, filename_costumer, code):
+    # retorna o cliente procurado por código por busca sequencial
+    def sequential_search_rom_costumer(self, filename_costumer, code):
         comp = 0
         start_time = time.time()
         found = False
@@ -394,16 +398,16 @@ class Store:
                 print()
                 print(result)
                 return result
-                break
 
         if not found:
             elapsed_time = time.time() - start_time
             print("Costumer CPF not found in the store.")
 
-        print()
         print("Total comparisons:", comp)
         print("Elapsed time:", elapsed_time, "seconds")
 
+    
+    # ordena clientes por nome
     def sort_customers_by_name(self, filename_costumer):
         df = pd.read_csv(filename_costumer)
         df = df.sort_values(by=['Costumer Name'])
@@ -447,7 +451,6 @@ class Store:
             "Customer Name": [C.name],
             "Order Code": [rand],
         }
-
         df_order = pd.DataFrame(data)
         if os.path.isfile(filename_pedidos):
             df_order.to_csv(filename_pedidos, mode="a", index=False, header=False)
@@ -458,7 +461,7 @@ class Store:
 
 
 
-    #achar cliente por CPF
+    # encontra clientes por CPF
     def find_customer_by_cpf(self, filename, cpf, chunksize=1000):
         # Abrir o arquivo CSV em partes menores (chunks)
         for chunk in pd.read_csv(filename, chunksize=chunksize):
@@ -475,11 +478,10 @@ class Store:
                     cep=customer_row['Adress'],
                     phone=customer_row['Number']
                 )
-        
         # Se nenhum cliente for encontrado em todos os chunks
         return None
     
-    #achar produto por codigo
+    # acha produtos por codigo
     def find_product_by_code(self, filename, cod, chunksize=1000):
         # Abrir o arquivo CSV em partes menores (chunks)
         for chunk in pd.read_csv(filename, chunksize=chunksize):
@@ -498,7 +500,8 @@ class Store:
         
         # Se nenhum cliente for encontrado em todos os chunks
         return None
-    
+
+    # calcula o saldo da loja baseado na pilha de pedidos feitos 
     def calculate_total_final_value(self, filename):
         try:
             df = pd.read_csv(filename)
