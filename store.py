@@ -20,21 +20,88 @@ class Store:
             self.phone = phone
             self.cpf = cpf
 
-    # facilitação para criar clientes (uso em place_order)
-    def create_customer(self):
-        name = input("Enter customer name: ")
-        cep = input("Enter customer CEP: ")
-        phone = input("Enter customer phone: ")
-        cpf = input("Enter customer CPF: ")
-        return Store.Customer(name, cep, phone, cpf)
-
-
     # possibilidade de execução em ram e contagem de saldo da loja
     def __init__(self):
         self.products_list = []
         self.customers = []
         self.orders = []
         self.balance = 0.0
+
+
+    # facilitação para criar clientes (uso em place_order)
+    def create_customer(self):
+        while True:
+            name = input("Enter customer name: ")
+            if not name:
+                print("Name cannot be empty. Please try again.")
+                continue
+
+            cep = input("Enter customer CEP: ")
+            if not cep.isdigit():
+                print("CEP must be a numeric value. Please try again.")
+                continue
+
+            phone = input("Enter customer phone: ")
+            if not phone.isdigit():
+                print("Phone must be a numeric value. Please try again.")
+                continue
+
+            cpf = input("Enter customer CPF: ")
+            if not cpf.isdigit():
+                print("CPF must be a numeric value. Please try again.")
+                continue
+
+            # Input validation successful
+            return Store.Customer(name, int(cep), int(phone), int(cpf))
+
+
+    #@override   
+    def create_customer_with_cpf(self, cpf):
+        while True:
+            name = input("Enter customer name: ")
+            if not name:
+                print("Name cannot be empty. Please try again.")
+                continue
+            
+            cep = input("Enter customer CEP: ")
+            if not cep.isdigit():
+                print("CEP must be a numeric value. Please try again.")
+                continue
+            
+            phone = input("Enter customer phone: ")
+            if not phone.isdigit():
+                print("Phone must be a numeric value. Please try again.")
+                continue
+            
+            # Input validation successful
+            return Store.Customer(name, int(cep), int(phone), cpf)
+        
+    # facilitação para criar clientes (uso em place_order)
+    def create_product(self):
+        while True:
+            name = input("Enter customer name: ")
+            if not name:
+                print("Name cannot be empty. Please try again.")
+                continue
+
+            code = input("Input the product code: ")
+            if not code.isdigit():
+                print("Code must be a numeric value. Please try again.")
+                continue
+
+            price = input("Input the product price: ")
+            if not price.isdigit():
+                print("Price must be a numeric value. Please try again.")
+                continue
+
+            quantity = input("Input the product quantity avaliable: ")
+            if not quantity.isdigit():
+                print("CPF must be a numeric value. Please try again.")
+                continue
+
+            # Input validation successful
+            return Store.Product(name, int(code), float(price), int(quantity))
+
 
     # adiciona produto no dicionario products_list, uso de ram
     def add_product(self, product):
@@ -109,7 +176,6 @@ class Store:
                 print("Product found in", comp, "comparisons and", elapsed_time, "seconds:")
                 print(result)
                 return result
-                break
 
         if not found:
             elapsed_time = time.time() - start_time
@@ -126,13 +192,21 @@ class Store:
             if not result.empty:
                 found = True
                 return result
-                break
 
         if not found:
             print("Product not found in the store.")
 
+    def sequential_search_rom_clean_by_name(self, filename, name):
+        found = False
+        # prod_aux = self.Product()
+        for chunk in pd.read_csv(filename, chunksize=15):
+            result = chunk[chunk['Product Name'] == name]
+            if not result.empty:
+                found = True
+                return result
 
-
+        if not found:
+            print("Product not found in the store.")
 
 
     # ordena produtos de arquivo por codigo de produto
@@ -202,13 +276,8 @@ class Store:
             print("0. Exit")
 
             choice = input("Enter your choice: ")
-
             if choice == "1":
-                product_name = input("Enter product name: ")
-                product_code = int(input("Enter product code: "))
-                product_quantity = int(input("Enter product quantity: "))
-                product_price = float(input("Enter product price: "))
-                product = self.Product(product_code, product_name, product_price, product_quantity)
+                product = self.create_product()
                 self.add_product(product)
                 self.save_product_to_file(product, filename)
 
@@ -253,17 +322,22 @@ class Store:
             choice = input("Enter your choice: ")
 
             if choice == "1":
-                product_code = int(input("Input the product code you wish to buy: "))
-                aux = self.sequential_search_rom_clean("products.csv", product_code)
+                product_name = str(input("Input the product name you wish to buy: "))
+                aux = self.sequential_search_rom_clean_by_name("products.csv", product_name)
+                # product_code = int(input("Input the product code you wish to buy: "))
+                # aux = self.sequential_search_rom_clean("products.csv", product_code)
                 if aux is None:
                     return
-                print("The product you searched: \n", self.sequential_search_rom_clean("products.csv", product_code), "\nif you wanna buy it please proceed.")
+                print("The product you searched: \n", aux, "\nif you wanna buy it please proceed.")
                 costumer_cpf = int(input("Input the costumer CPF (if you don't wanna but it input -1): "))
                 if costumer_cpf == -1:
                     print("Purchased cancelled!")
                     break
                 quantity = int(input("Input the quantity you wish to buy: "))
-                self.place_order(filename_order,product_code,costumer_cpf,quantity)
+                # aux = aux.iloc[:].values.tolist()
+                # print(aux)
+                self.place_order(filename_order,aux.iloc[0]["Product Code"],costumer_cpf,quantity)
+                # self.place_order(filename_order,product_code,costumer_cpf,quantity)
 
             elif choice == "2":
                 print("Reading Order's file!")
@@ -281,7 +355,7 @@ class Store:
             print("\n=== CUSTOMER MENU ===")
             print("1. Add Customer")
             print("2. Remove Customer")
-            print("3. List Customer's")
+            print("3. Read Customers List")
             print("4. Gen Random Custumers")
             print("5. Sequential Search")
             print("6. Sort by Alphabetical Order")
@@ -291,11 +365,7 @@ class Store:
             choice = input("Enter your choice: ")
 
             if choice == "1":
-                customer_name = input("Enter customer name: ")
-                customer_address = input("Enter customer CEP: ")
-                customer_phone = input("Enter customer phone: ")
-                customer_cpf = input("Enter customer CPF: ")
-                customer = self.Customer(customer_name, customer_address, customer_phone, customer_cpf)
+                customer = self.create_customer()
                 self.save_costumer_to_file(customer, filename_costumer)
 
             elif choice == "2":
@@ -357,7 +427,7 @@ class Store:
 ################################### funções relacionadas ao objeto cliente
 
     # salva cliente no arquivo de clientes
-    def save_costumer_to_file(self, costumer, filename_costumer):
+    def save_costumer_to_file(self, filename_costumer, costumer):
         data = {
             "Costumer Name": [costumer.name],
             "Costumer CPF": [costumer.cpf],
@@ -440,7 +510,7 @@ class Store:
     ################################################# Funções relacionadas ao objeto Order
 
     # realiza Order de dado cliente
-    def place_order(self, filename_pedidos, product_code, costumer_cpf, quantity):
+    def place_order(self, orders_file, product_code, costumer_cpf, quantity):
         rand = random.randint(1, 1000)
 
         product_aux = self.find_product_by_code("products.csv", product_code)
@@ -448,7 +518,8 @@ class Store:
 
         if costumer_aux is None:
             print("Couldn't find customer!")
-            costumer_aux = self.create_customer()
+            costumer_aux = self.create_customer_with_cpf(costumer_cpf)
+            self.save_costumer_to_file("costumer.csv", costumer_aux)
         if product_aux is None:
             print("Couldn't find product!")
             return
@@ -476,12 +547,12 @@ class Store:
             "Final Value": [expense]
         }
         df_order = pd.DataFrame(data)
-        if os.path.isfile(filename_pedidos):
-            df_order.to_csv(filename_pedidos, mode="a", index=False, header=False)
+        if os.path.isfile(orders_file):
+            df_order.to_csv(orders_file, mode="a", index=False, header=False)
         else:
-            df_order.to_csv(filename_pedidos, mode="a", index=False)
+            df_order.to_csv(orders_file, mode="a", index=False)
 
-        print(f"Order '{product_code}' saved to '{filename_pedidos}' successfully.")
+        print(f"Order '{product_code}' saved to '{orders_file}' successfully.")
 
 
 

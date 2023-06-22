@@ -2,9 +2,7 @@ Product Name,Product Code,Quantity,Price
 Memphis,0,5,999.9
 Flute,2,0,841.23
 Acoustic Guitar Strings,3,1,186.76
-Acoustic Guitar Strings,3,1,186.76
-Pandero,4,1,791.78
-Pandero,4,1,791.78
+Pandero,4,0,791.78
 Pick,5,2,427.73
 Keyboard,6,19,39.03
 Drum,7,0,666.14
@@ -35,13 +33,13 @@ Zither,30,11,175.19
 Maraca,31,10,130.66
 Mellotron,32,4,470.23
 Sitar,33,7,623.86
-Tuner,34,9,323.61
+Tuner,34,6,323.61
 Hurdy-gurdy,35,16,603.03
 Cable P10,36,19,225.79
 Mandolin,37,17,778.64
 Flute,38,0,141.38
 Pedal,39,8,649.81
-Violin,40,6,680.83
+Violin,40,5,680.83
 Xylophone,41,7,210.61
 Hang,42,0,472.68
 Pan flute,43,20,133.08
@@ -66,7 +64,7 @@ Saxophone,61,3,823.6
 Theremin,62,1,628.63
 Harmonica,63,7,450.43
 Violin Strings,64,4,245.13
-Guitar,65,6,764.71
+Guitar,65,0,764.71
 Balalaika,66,12,544.88
 Cello,67,13,524.78
 Bagpipes,68,12,237.32
