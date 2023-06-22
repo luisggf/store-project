@@ -1,7 +1,7 @@
 Product Name,Product Code,Quantity,Price
-Memphis,0,2,999.9
+Memphis,0,10,999.9
 Flute,2,1,841.23
-Acoustic Guitar Strings,3,4,186.76
+Acoustic Guitar Strings,3,1,186.76
 Pandero,4,1,791.78
 Pick,5,2,427.73
 Keyboard,6,19,39.03
@@ -54,7 +54,7 @@ Sousaphone,51,4,905.21
 Castanets,52,0,355.99
 Vibraphone,53,2,643.0
 Ukulele,54,17,333.99
-Guitar Strings,55,6,657.18
+Guitar Strings,55,5,657.18
 Tamboura,56,14,705.46
 Steel drum,57,9,506.51
 Piano,58,3,262.2
@@ -69,7 +69,7 @@ Balalaika,66,12,544.88
 Cello,67,13,524.78
 Bagpipes,68,12,237.32
 Kazoo,69,17,720.05
-Amplifier,70,18,820.19
+Amplifier,70,3,820.19
 Dulcimer,71,4,219.1
 Sax,72,10,73.76
 Harp,73,19,314.8
@@ -81,6 +81,5 @@ Bassoon,78,19,645.33
 Udu drum,79,9,852.79
 Kalimba,80,7,300.15
 Accordion,81,1,641.67
-Acoustic Guitar Strings,3,4,186.76
+Acoustic Guitar Strings,3,1,186.76
 Pandero,4,1,791.78
-Memphis,0,0,999.9
