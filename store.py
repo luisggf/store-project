@@ -118,6 +118,22 @@ class Store:
         print("Total comparisons:", comp)
         print("Elapsed time:", elapsed_time, "seconds")
 
+    def sequential_search_rom_clean(self, filename, code):
+        found = False
+        # prod_aux = self.Product()
+        for chunk in pd.read_csv(filename, chunksize=15):
+            result = chunk[chunk['Product Code'] == code]
+            if not result.empty:
+                found = True
+                return result
+                break
+
+        if not found:
+            print("Product not found in the store.")
+
+
+
+
 
     # ordena produtos de arquivo por codigo de produto
     def sort_products_by_code(self, filename):
@@ -237,10 +253,17 @@ class Store:
             choice = input("Enter your choice: ")
 
             if choice == "1":
-                codigo_prod = int(input("Digite o codigo do produto: "))
-                cliente_CPF = int(input("Digite o CPF do cliente: "))
-                quantity = int(input("Digite a quantidade: "))
-                self.place_order(filename_order,codigo_prod,cliente_CPF,quantity)
+                product_code = int(input("Input the product code you wish to buy: "))
+                aux = self.sequential_search_rom_clean("products.csv", product_code)
+                if aux is None:
+                    return
+                print("The product you searched: \n", self.sequential_search_rom_clean("products.csv", product_code), "\nif you wanna buy it please proceed.")
+                costumer_cpf = int(input("Input the costumer CPF (if you don't wanna but it input -1): "))
+                if costumer_cpf == -1:
+                    print("Purchased cancelled!")
+                    break
+                quantity = int(input("Input the quantity you wish to buy: "))
+                self.place_order(filename_order,product_code,costumer_cpf,quantity)
 
             elif choice == "2":
                 print("Reading Order's file!")
@@ -261,7 +284,7 @@ class Store:
             print("3. List Customer's")
             print("4. Gen Random Custumers")
             print("5. Sequential Search")
-            print("6. Ordem Alfabética")
+            print("6. Sort by Alphabetical Order")
             print("7. Shuffle")
             print("0. Exit")
 
@@ -286,8 +309,8 @@ class Store:
                 self.gen_random_costumers()
 
             elif choice == "5":
-                cpf = int(input("INPUT CPF: "))
-                self.sequential_search_rom_cliente(filename_costumer,cpf)
+                cpf = int(input("Input your CPF: "))
+                self.sequential_search_rom_costumer(filename_costumer,cpf)
             
             elif choice == "6":
                 self.sort_customers_by_name(filename_costumer)
@@ -417,39 +440,40 @@ class Store:
     ################################################# Funções relacionadas ao objeto Order
 
     # realiza Order de dado cliente
-    def place_order(self, filename_pedidos, codigo_prod, cliente_CPF, quantity):
+    def place_order(self, filename_pedidos, product_code, costumer_cpf, quantity):
         rand = random.randint(1, 1000)
 
-        P = self.find_product_by_code("products.csv", codigo_prod)
-        C = self.find_customer_by_cpf("costumer.csv", cliente_CPF)
+        product_aux = self.find_product_by_code("products.csv", product_code)
+        costumer_aux = self.find_customer_by_cpf("costumer.csv", costumer_cpf)
 
-        if C is None:
+        if costumer_aux is None:
             print("Couldn't find customer!")
-            C = self.create_customer()
-        if P is None:
+            costumer_aux = self.create_customer()
+        if product_aux is None:
             print("Couldn't find product!")
             return
 
-        expense = P.price * quantity
+        expense = float(product_aux.price * quantity)
         self.balance += expense
 
-        if P.quantity == 0 or P.quantity < quantity:
+        if product_aux.quantity == 0 or product_aux.quantity < quantity:
             print("All Products Sold Out!")
             return
 
-        P.quantity -= quantity
-        # self.save_product_to_file(P, "products.csv")
+        product_aux.quantity -= quantity
+        # self.save_product_to_file(product_aux, "products.csv")
 
         # Update quantity in the file
         df = pd.read_csv("products.csv")
-        df.loc[df["Product Code"] == codigo_prod, "Quantity"] = P.quantity
+        df.loc[df["Product Code"] == product_code, "Quantity"] = product_aux.quantity
         df.to_csv("products.csv", index=False)
 
         data = {
-            "Product Name": [P.name],
+            "Product Name": [product_aux.name],
             "Bought Quantity:": [quantity],
-            "Customer Name": [C.name],
+            "Customer Name": [costumer_aux.name],
             "Order Code": [rand],
+            "Final Value": [expense]
         }
         df_order = pd.DataFrame(data)
         if os.path.isfile(filename_pedidos):
@@ -457,7 +481,7 @@ class Store:
         else:
             df_order.to_csv(filename_pedidos, mode="a", index=False)
 
-        print(f"Order '{codigo_prod}' saved to '{filename_pedidos}' successfully.")
+        print(f"Order '{product_code}' saved to '{filename_pedidos}' successfully.")
 
 
 
@@ -505,7 +529,7 @@ class Store:
     def calculate_total_final_value(self, filename):
         try:
             df = pd.read_csv(filename)
-            total_final_value = df['Final Value'].sum()
+            total_final_value = float(df['Final Value'].sum())
             return float(total_final_value)
         except FileNotFoundError:
             print(f"File '{filename}' not found.")
