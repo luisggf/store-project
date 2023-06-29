@@ -1,83 +1,82 @@
 Product Name,Product Code,Quantity,Price
-Memphis,0,5,999.9
-Flute,2,0,841.23
-Acoustic Guitar Strings,3,1,186.76
-Pandero,4,0,791.78
-Pick,5,2,427.73
-Keyboard,6,19,39.03
-Drum,7,0,666.14
-Jaw harp,8,10,928.49
-Drum kit,9,7,873.57
-Tambourine,10,3,319.32
-Tabla,11,10,327.44
-Accordion,12,12,637.47
-Piano Strings,13,17,924.73
-Banjo,14,3,959.62
-Bongo,15,12,853.36
-Steel pan,16,10,903.48
-Triangle,17,15,592.15
-Sitar,18,2,483.03
-Clarinet,19,5,106.74
-Cowbell,20,0,479.67
-Djembe,21,6,107.24
-Ukulele Strings,22,11,851.06
-Bamboo flute,23,9,757.0
-Bouzouki,24,17,27.98
-thales,24,25,0.0
-Conga,25,4,410.61
-Glockenspiel,26,15,805.46
-PedalBoard,27,5,714.66
-Concertina,28,9,51.15
-Handpan,29,19,916.04
-Zither,30,11,175.19
-Maraca,31,10,130.66
-Mellotron,32,4,470.23
-Sitar,33,7,623.86
-Tuner,34,6,323.61
-Hurdy-gurdy,35,16,603.03
-Cable P10,36,19,225.79
-Mandolin,37,17,778.64
-Flute,38,0,141.38
-Pedal,39,8,649.81
-Violin,40,5,680.83
-Xylophone,41,7,210.61
-Hang,42,0,472.68
-Pan flute,43,20,133.08
-Harpsichord,44,19,926.25
-Didgeridoo,45,11,885.73
-Pandeiro,46,4,379.68
-Shamisen,47,18,901.26
-French horn,48,13,171.57
-Eletric Guitar,49,0,547.47
-Bass drum,50,8,124.98
-Sousaphone,51,4,905.21
-Castanets,52,0,355.99
-Vibraphone,53,2,643.0
-Ukulele,54,17,333.99
-Guitar Strings,55,5,657.18
-Tamboura,56,14,705.46
-Steel drum,57,9,506.51
-Piano,58,3,262.2
-Trombone,59,20,912.69
-Trumpet,60,20,145.37
-Saxophone,61,3,823.6
-Theremin,62,1,628.63
-Harmonica,63,7,450.43
-Violin Strings,64,4,245.13
-Guitar,65,0,764.71
-Balalaika,66,12,544.88
-Cello,67,13,524.78
-Bagpipes,68,12,237.32
-Kazoo,69,17,720.05
-Amplifier,70,3,820.19
-Dulcimer,71,4,219.1
-Sax,72,10,73.76
-Harp,73,19,314.8
-Ocarina,74,8,532.42
-Viola,75,19,286.9
-Bassoon,76,0,483.77
-Koto,77,3,547.68
-Bassoon,78,19,645.33
-Udu drum,79,9,852.79
-Kalimba,80,7,300.15
-Accordion,81,1,641.67
+Flute,0,9,925.75
+Cable P10,1,18,924.19
+Violin Strings,2,17,425.79
+Clarinet,3,20,362.11
+Mandolin,4,14,476.97
+Mellotron,5,3,452.72
+Eletric Guitar,6,4,76.26
+Bassoon,7,0,33.87
+Steel drum,8,9,543.26
+Saxophone,9,17,608.95
+Viola,10,15,636.79
+Pandeiro,11,3,930.1
+Djembe,12,0,382.77
+Sax,13,19,514.05
+Harpsichord,14,20,29.62
+Conga,15,9,516.13
+Keyboard,16,8,945.87
+Guitar,17,2,984.37
+Violin,18,3,828.1
+Harp,19,7,495.45
+Accordion,20,5,100.19
+Piano Strings,21,14,331.09
+Flute,22,15,807.28
+Bongo,23,14,498.98
+Koto,24,0,474.55
+Hurdy-gurdy,25,6,886.33
+Cello,26,4,889.15
+PedalBoard,27,19,846.78
+Udu drum,28,14,242.54
+Trumpet,29,19,456.96
+Bass drum,30,4,697.51
+Cowbell,31,20,302.27
+Castanets,32,12,370.4
+Trombone,33,11,968.84
+Triangle,34,11,715.03
+Tambourine,35,16,897.61
+Handpan,36,12,40.52
+Concertina,37,2,744.31
+Tuner,38,18,897.9
+Glockenspiel,39,14,733.07
+Balalaika,40,15,716.51
+Sitar,41,14,658.13
+Jaw harp,42,14,463.94
+Xylophone,43,16,378.64
+Harmonica,44,20,946.03
+Tabla,45,9,201.2
+Sitar,46,11,461.67
+Bagpipes,47,9,142.59
+Oboe,48,18,813.71
+Theremin,49,12,214.35
+Guitar Strings,50,18,725.09
+Zither,51,8,966.28
+Piano,52,9,237.12
+Accordion,53,5,575.66
+Steel pan,54,17,120.91
+Acoustic Guitar Strings,55,15,515.8
+Bouzouki,56,15,512.52
+Bamboo flute,57,9,579.08
+Vibraphone,58,13,87.91
+Pan flute,59,9,496.38
+Ocarina,60,6,717.56
+Didgeridoo,61,19,742.36
+Hang,62,1,768.37
+Kalimba,63,3,407.22
+Pandero,64,2,844.76
+French horn,65,10,728.48
+Drum,66,1,269.93
+Drum kit,67,17,533.48
+Ukulele Strings,68,0,332.0
+Banjo,69,0,889.16
+Dulcimer,70,2,313.71
+Pedal,71,19,849.31
+Shamisen,72,13,58.92
+Maraca,73,8,615.33
+Sousaphone,74,4,585.67
+Amplifier,75,14,444.42
+Bassoon,76,8,299.72
+Kazoo,77,5,577.5
+Ukulele,78,16,482.76
+Tamboura,79,18,728.38
+Pick,80,10,685.4
