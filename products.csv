@@ -1,4 +1,5 @@
 Product Name,Product Code,Quantity,Price
+<<<<<<< HEAD
 Clarinet,0,12,651.78
 Didgeridoo,1,17,281.05
 Cowbell,2,9,759.46
@@ -81,3 +82,86 @@ Harpsichord,78,6,971.76
 Drum kit,79,0,444.58
 Piano Strings,80,20,43.06
 Bamboo flute,81,2,237.84
+=======
+Flute,0,9,925.75
+Cable P10,1,18,924.19
+Violin Strings,2,17,425.79
+Clarinet,3,20,362.11
+Mandolin,4,14,476.97
+Mellotron,5,3,452.72
+Eletric Guitar,6,4,76.26
+Bassoon,7,0,33.87
+Steel drum,8,9,543.26
+Saxophone,9,17,608.95
+Viola,10,15,636.79
+Pandeiro,11,3,930.1
+Djembe,12,0,382.77
+Sax,13,19,514.05
+Harpsichord,14,20,29.62
+Conga,15,9,516.13
+Keyboard,16,8,945.87
+Guitar,17,2,984.37
+Violin,18,3,828.1
+Harp,19,7,495.45
+Accordion,20,5,100.19
+Piano Strings,21,14,331.09
+Flute,22,15,807.28
+Bongo,23,14,498.98
+Koto,24,0,474.55
+Hurdy-gurdy,25,6,886.33
+Cello,26,4,889.15
+PedalBoard,27,19,846.78
+Udu drum,28,14,242.54
+Trumpet,29,19,456.96
+Bass drum,30,4,697.51
+Cowbell,31,20,302.27
+Castanets,32,12,370.4
+Trombone,33,11,968.84
+Triangle,34,11,715.03
+Tambourine,35,16,897.61
+Handpan,36,12,40.52
+Concertina,37,2,744.31
+Tuner,38,18,897.9
+Glockenspiel,39,14,733.07
+Balalaika,40,15,716.51
+Sitar,41,14,658.13
+Jaw harp,42,14,463.94
+Xylophone,43,16,378.64
+Harmonica,44,20,946.03
+Tabla,45,9,201.2
+Sitar,46,11,461.67
+Bagpipes,47,9,142.59
+Oboe,48,18,813.71
+Theremin,49,12,214.35
+Guitar Strings,50,18,725.09
+Zither,51,8,966.28
+Piano,52,9,237.12
+Accordion,53,5,575.66
+Steel pan,54,17,120.91
+Acoustic Guitar Strings,55,15,515.8
+Bouzouki,56,15,512.52
+Bamboo flute,57,9,579.08
+Vibraphone,58,13,87.91
+Pan flute,59,9,496.38
+Ocarina,60,6,717.56
+Didgeridoo,61,19,742.36
+Hang,62,1,768.37
+Kalimba,63,3,407.22
+Pandero,64,2,844.76
+French horn,65,10,728.48
+Drum,66,1,269.93
+Drum kit,67,17,533.48
+Ukulele Strings,68,0,332.0
+Banjo,69,0,889.16
+Dulcimer,70,2,313.71
+Pedal,71,19,849.31
+Shamisen,72,13,58.92
+Maraca,73,8,615.33
+Sousaphone,74,4,585.67
+Amplifier,75,14,444.42
+Bassoon,76,8,299.72
+Kazoo,77,5,577.5
+Ukulele,78,16,482.76
+Tamboura,79,18,728.38
+Pick,80,10,685.4
+>>>>>>> 658c99b9d8227691e312fc3bd0747cb99d0640b5

@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 Product Name,Quantity,Costumer Name,Order Code,Final Value
 Drum kit,3,Alice Fernandes,368,2620.71
 Flute,1,Joao Martins,987,841.23
 Pandero,1,Hugo Souza,875,791.78
+=======
+Product Name,Bought Quantity:,Customer Name,Order Code,Final Value
+Violin,3,Rhonda Johnson,633,2484.3
+Cello,3,Arthur,368,2667.45
+>>>>>>> 658c99b9d8227691e312fc3bd0747cb99d0640b5
