@@ -1,15 +1,26 @@
 import time
 import random
 import os
-import io
-import heapq
-import shutil
-import csv
+from ArvoreB import *
 import pandas as pd
 from faker import Faker
-#pip install faker
+
 
 class Store:
+    # Ler o arquivo CS
+    # Criar um nó
+    class BTreeNode:
+        def __init__(self, folha=False):
+            self.folha = folha
+            self.chaves = []
+            self.filho = []
+
+    # Árvore B
+    class BTree:
+        def __init__(self, t):
+            self.raiz = self.BTreeNode(True)
+            self.t = t
+
     class Product:
         def __init__(self, code, name, price, quantity):
             self.code = code
@@ -27,9 +38,12 @@ class Store:
     # possibilidade de execução em ram e contagem de saldo da loja
     def __init__(self):
         self.balance = 0.0
-
+        self.listagrafos = {}
+        self.no = 0
+        self.caminho = 0
 
     # facilitação para criar clientes (uso em place_order)
+
     def create_customer(self):
         while True:
             name = input("Enter customer name: ")
@@ -53,8 +67,8 @@ class Store:
             # Input validation successful
             return Store.Customer(name, Adress, int(phone), int(cpf))
 
+    # @override
 
-    #@override   
     def create_customer_with_cpf(self, cpf):
         while True:
             name = input("Enter customer name: ")
@@ -63,15 +77,15 @@ class Store:
                 continue
             name.capitalize()
             Adress = input("Enter customer Adress: ")
-            
+
             phone = input("Enter customer phone: ")
             if not phone.isdigit():
                 print("Phone must be a numeric value. Please try again.")
                 continue
-            
+
             # Input validation successful
             return Store.Customer(name, Adress, int(phone), cpf)
-        
+
     # facilitação para criar clientes (uso em place_order)
     def create_product(self):
         while True:
@@ -97,7 +111,7 @@ class Store:
                 continue
 
             # Input validation successful
-            return Store.Product(int(code),name, float(price), int(quantity))
+            return Store.Product(int(code), name, float(price), int(quantity))
 
     # le o arquivo filename passado por parametro em chunks (pedaços de 30), uso de rom
     def read_file(self, filename):
@@ -148,7 +162,7 @@ class Store:
                     quantity=product_row['Quantity'],
                     price=product_row['Price']
                 )
-        
+
         # Se nenhum cliente for encontrado em todos os chunks
         return None
 
@@ -187,7 +201,7 @@ class Store:
         print("Total comparisons:", comp)
         print("Elapsed time:", elapsed_time, "seconds")
 
-    # realiza a busca sequencial de um codigo de produto no arquivo, retornando tempo gasto 
+    # realiza a busca sequencial de um codigo de produto no arquivo, retornando tempo gasto
     # numero de comparações
     def sequential_search_rom(self, filename, code):
         comp = 0
@@ -200,7 +214,8 @@ class Store:
             if not result.empty:
                 found = True
                 elapsed_time = time.time() - start_time
-                print("Product found in", comp, "comparisons and", elapsed_time, "seconds:")
+                print("Product found in", comp,
+                      "comparisons and", elapsed_time, "seconds:")
                 print(result)
                 return result
 
@@ -235,8 +250,8 @@ class Store:
         if not found:
             print("Product not found in the store.")
 
-
     # ordena produtos de arquivo por codigo de produto
+
     def sort_products_by_code(self, filename):
         df = pd.read_csv(filename)
         df = df.sort_values(by=['Product Code'])
@@ -261,33 +276,209 @@ class Store:
             cleaned_line = line.rstrip()
             random_float = round(random.uniform(20, 1000), 2)
             random_integer = random.randint(0, 20)
-            var_product = self.Product(code, cleaned_line, random_float, random_integer)
+            var_product = self.Product(
+                code, cleaned_line, random_float, random_integer)
             code += 1
             self.save_product_to_file(var_product, "products.csv")
 
-    # particiona o arquivo maior em arquivos menores de forma ordenada
-    def sorted_partition_creation_ROM(self, filename, chunk_size):
-        partition_counter = 1
-        partitions = []
-        chunk = []
-        self.sort_products_by_code(filename)
-        for _, row in pd.read_csv(filename).iterrows():
-            chunk.append(row)
-            if len(chunk) >= chunk_size:
-                chunk = sorted(chunk, key=lambda x: x['Product Code'])
-                partitions.append(chunk)
-                partition_filename = f'./partitions/sorted-partition-{partition_counter}.csv'
-                pd.DataFrame(chunk).to_csv(partition_filename, index=False)
-                partition_counter += 1
-                chunk = []
-        if chunk:
-            chunk = sorted(chunk, key=lambda x: x['Product Code'])
-            partitions.append(chunk)
-            partition_filename = f'./partitions/sorted-partition-{partition_counter}.csv'
-            pd.DataFrame(chunk).to_csv(partition_filename, index=False)
-        return partitions
+    def generate_ordered_partitions(self, input_filename, output_filename, M):
+        # Leitura do arquivo CSV
+        df = pd.read_csv(input_filename)
+
+        # Variáveis de controle
+        partition_number = 1
+        reservatorio = []
+        memoria = []
+        A = 0
+        ultimo_indice = len(df) - 1
+        header_written = False
+
+        for index, line in df.iterrows():
+
+            new_line = line
+
+            if A < M:
+                # AQUI VAI LER M REGISTRO
+                memoria.append(new_line)
+                A += 1
+            else:
+
+                # Caso a memoria não está toda preenchida.
+                if len(memoria) != M:
+
+                    # verifica se o valor gravado na partição é maior que a proxima linha
+                    if new_line["Product Code"] < min_product_code:
+                        reservatorio.append(new_line)
+
+                        # Caso o reservatorio esteja cheio, vai colocar tudo na partição
+                        if len(reservatorio) == M:
+                            # ORDENA RESERVATORIO
+                            memoria = sorted(
+                                memoria, key=lambda x: x["Product Code"])
+
+                            for a in memoria:
+                                # escreve no arquivo o reservatorio ordenado
+                                output_file.write(
+                                    f"{a['Product Name']},{a['Product Code']},{a['Quantity']},{a['Price']}\n")                 #
+                            output_file.close()
+                            # transfere o reservatorio para a memoria
+                            memoria = reservatorio
+                            # zera o reservatorio
+                            reservatorio = []
+                            partition_number += 1
+                            # Fica falso pois diz que uma outra partição ira abrir e precisara colocar o cabeçalho
+                            header_written = False
+                    else:
+                        memoria.append(new_line)
+
+                else:
+                    # Pega o valor minimo da memoria, APENAS O CODIGO
+                    min_product_code = min(memoria, key=lambda x: x["Product Code"])[
+                        "Product Code"]
+                    # pega o valor minimo da memoria, A LINHA INTEIRA
+                    min_product_code_row = min(
+                        memoria, key=lambda x: x["Product Code"])
+
+                    # Cria um novo arquivo
+                    #
+                    output_filename = f"./partitions/{partition_number}.csv"
+                    output_file = open(output_filename, "a")
+                    # Caso a partição seja nova, ela coloca o cabeçalho
+                    if not header_written:
+                        output_file.write(
+                            "Product Name,Product Code,Quantity,Price\n")
+                        # Deixa true pois significa que o cabeçalho está preenchido
+                        header_written = True
+
+                    output_file.write(
+                        f"{min_product_code_row['Product Name']},{min_product_code_row['Product Code']},{min_product_code_row['Quantity']},{min_product_code_row['Price']}\n")
+
+                    # Remove o valor minimo da memoria
+                    min_index = min(range(len(memoria)),
+                                    key=lambda i: memoria[i]["Product Code"])
+                    memoria.pop(min_index)
+
+                    # verifica se o valor gravado na partição é maior que a proxima linha
+                    if new_line["Product Code"] < min_product_code:
+                        reservatorio.append(new_line)
+                    else:
+                        memoria.append(new_line)
+
+                    # VEEFICIANDO se o reservatório está cheio
+                    if len(reservatorio) == M:
+                        # ORDENA RESERVATORIO
+                        memoria = sorted(
+                            memoria, key=lambda x: x["Product Code"])
+                        for a in memoria:
+                            # escreve no arquivo o reservatorio ordenado
+                            output_file.write(
+                                f"{a['Product Name']},{a['Product Code']},{a['Quantity']},{a['Price']}\n")
+                        # transfere o reservatorio para a memoria
+                        memoria = reservatorio
+                        # zera o reservatorio
+                        reservatorio = []
+                        partition_number += 1
+                        header_written = False
+
+        # Caso o arquivo acabe e tenha conteudo no reservatorio ou na memoria
+        if ultimo_indice == index:
+            # Caso tenha conteudo na memoria ---------------#
+            #
+            memoria = sorted(memoria, key=lambda x: x["Product Code"])
+            for a in memoria:                                 #
+                output_file.write(
+                    f"{a['Product Name']},{a['Product Code']},{a['Quantity']},{a['Price']}\n")
+            output_file.close()                #
+            # -----------------------------------------------#
+
+            # Caso tenha no reservatorio-------------------------------------------------#
+            if len(reservatorio) != 0:
+                #
+                reservatorio = sorted(
+                    reservatorio, key=lambda x: x["Product Code"])
+                partition_number += 1                                                   #
+                # é preciso criar um novo arquivo, pois o reservatorio pode conter numeros menores que na partição#
+                output_filename = f"./partitions/{partition_number}.csv"   #
+                output_file = open(output_filename, "a")
+                #
+                output_file.write("Product Name,Product Code,Quantity,Price\n")
+                for b in reservatorio:                                                  #
+                    #
+                    output_file.write(
+                        f"{b['Product Name']},{b['Product Code']},{b['Quantity']},{b['Price']}\n")
+            # ---------------------------------------------------------------------------#
+            output_file.close()
+
+    def merge_partitions(self, input_folder, output_name):
+        file_names = [os.path.join(input_folder, file) for file in os.listdir(
+            input_folder) if file.endswith(".csv")]
+        num_files = len(file_names)
+
+        # Abrir os arquivos de entrada em modo de leitura
+        files = [open(name, "r") for name in file_names]
+
+        # Abrir o arquivo de saída em modo de escrita
+        output_file = open(output_name, "w")
+
+        # Pular a primeira linha de cada arquivo de entrada (cabeçalho)
+        for file in files:
+            file.readline()
+
+        # Escrever o cabeçalho no arquivo de saída
+        header = "Product Name,Product Code,Quantity,Price\n"
+        output_file.write(header)
+
+        # Ler a primeira linha de cada arquivo de entrada e armazená-la junto com o índice do arquivo correspondente
+        lines = [self.read_line(files, i) for i in range(num_files)]
+        # Remover os valores None da lista
+        lines = [x for x in lines if x is not None]
+
+        # Enquanto a lista não estiver vazia
+        while lines:
+            # Encontrar o menor valor na lista com base no Código do Produto (índice 1)
+            smallest = min(lines, key=lambda x: x[1])
+            line, product_code, i = smallest
+
+            # Escrever o menor valor no arquivo de saída
+            self.write_line(output_file, line)
+
+            # Ler a próxima linha do arquivo correspondente ao menor valor
+            next_line = self.read_line(files, i)
+
+            # Se o próximo valor não for None
+            if next_line is not None:
+                # Atualizar a lista com o novo valor e índice
+                lines[lines.index(smallest)] = next_line
+            # Caso contrário
+            else:
+                # Remover o valor e índice da lista
+                lines.remove(smallest)
+
+        # Fechar os arquivos de entrada e saída
+        for file in files:
+            file.close()
+        output_file.close()
+        print("Arquivo ordenado e mesclado foi salvo como:", output_name)
+
+    # Função para ler uma linha de cada arquivo de entrada
+    def read_line(self, files, i):
+        try:
+            # Ler a linha e dividi-la por vírgulas
+            line = files[i].readline().strip().split(',')
+            # Converter o Código do Produto para um inteiro
+            product_code = int(line[1])
+            # Retornar a linha juntamente com o código do produto e o índice do arquivo
+            return (line, product_code, i)
+        except:
+            return None
+
+    # Função para escrever uma linha no arquivo de saída
+    def write_line(self, file, value):
+        # Juntar os elementos da linha com vírgulas e escrever no arquivo de saída
+        file.write(','.join(value) + '\n')
 
     # menu de manutenção dos produtos para maior acessibilidade para o usuario
+
     def menu_product(self, filename):
         while True:
             print("\n=== PRODUCT MENU ===")
@@ -299,8 +490,13 @@ class Store:
             print("6. Sort Products")
             print("7. Shuffle File")
             print("8. Generate Random Instruments")
-            print("9. Sorted Partition Creation")
-            print("10. Intercalation Sort")
+            print("9. Sorted Partition Selection")
+            print("10. Intercalar")
+            print("11. Criar Arvore B")
+            print("12. Imprimir Arvore B")
+            print("13. Buscar na Arvore B")
+            print("14. Inserir na Arvore B")
+
             print("0. Exit")
 
             choice = input("Enter your choice: ")
@@ -319,9 +515,9 @@ class Store:
                 product_code = int(input("Enter product code to search: "))
                 self.sequential_search_rom(filename, product_code)
 
-            elif choice =="5":
+            elif choice == "5":
                 product_code = int(input("Enter product code to search: "))
-                self.binary_search_product(filename,product_code)
+                self.binary_search_product(filename, product_code)
 
             elif choice == "6":
                 self.sort_products_by_code(filename)
@@ -333,10 +529,25 @@ class Store:
                 self.gen_random_instruments()
 
             elif choice == "9":
-                chunk_size = int(input("Enter chunk size for partition creation: "))
-                self.generate_ordered_partitions(filename, "partition", chunk_size)
+                self.generate_ordered_partitions(filename, "saida", 6)
+
             elif choice == "10":
                 self.merge_partitions("./partitions/", "merge.csv")
+
+            elif choice == "11":
+                B = BTree(3)
+                B.criar_arvore(B)
+            elif choice == "12":
+                B.imprimir_arvore(B.raiz)
+            elif choice == "13":
+                B.buscar_codigo_arvore(B)
+            elif choice == "14":
+                product = self.create_product()
+                self.save_product_to_file(product, filename)
+
+                novo_produto = (product.code, product.name)
+                B.inserir(novo_produto)
+
             elif choice == "0":
                 break
 
@@ -344,6 +555,7 @@ class Store:
                 print("Invalid choice. Please try again.")
 
     # menu interativo para realizar pedidos
+
     def menu_order(self, filename_order):
         while True:
             print("\n=== ORDER MENU ===")
@@ -359,17 +571,22 @@ class Store:
             choice = input("Enter your choice: ")
 
             if choice == "1":
-                product_name = str(input("Input the product name you wish to buy: "))
-                aux = self.sequential_search_rom_clean_by_name("products.csv", product_name)
+                product_name = str(
+                    input("Input the product name you wish to buy: "))
+                aux = self.sequential_search_rom_clean_by_name(
+                    "products.csv", product_name)
                 if aux is None:
                     return
-                print("The product you searched: \n", aux, "\nif you wanna buy it please proceed.")
-                costumer_cpf = int(input("Input the costumer CPF (if you don't wanna but it input -1): "))
+                print("The product you searched: \n", aux,
+                      "\nif you wanna buy it please proceed.")
+                costumer_cpf = int(
+                    input("Input the costumer CPF (if you don't wanna but it input -1): "))
                 if costumer_cpf == -1:
                     print("Purchased cancelled!")
                     break
                 quantity = int(input("Input the quantity you wish to buy: "))
-                self.place_order(filename_order,aux.iloc[0]["Product Code"],costumer_cpf,quantity)
+                self.place_order(
+                    filename_order, aux.iloc[0]["Product Code"], costumer_cpf, quantity)
 
             elif choice == "2":
                 order_code = int(input("Enter Order Code: "))
@@ -382,11 +599,11 @@ class Store:
 
             elif choice == "4":
                 code = int(input("Input Order Code: "))
-                self.sequential_search_rom_order(filename_order,code)
+                self.sequential_search_rom_order(filename_order, code)
 
             elif choice == "5":
                 code = int(input("Input Order Code: "))
-                self.binary_search_order(filename_order,code)
+                self.binary_search_order(filename_order, code)
 
             elif choice == "6":
                 self.sort_order_by_code(filename_order)
@@ -400,6 +617,7 @@ class Store:
             else:
                 print("Invalid choice. Please try again.")
     # menu de manutenção dos clientes para maior acessibilidade para o usuario
+
     def menu_customer(self, filename_costumer):
         while True:
             print("\n=== CUSTOMER MENU ===")
@@ -431,12 +649,12 @@ class Store:
 
             elif choice == "5":
                 cpf = int(input("Input your CPF: "))
-                self.sequential_search_rom_costumer(filename_costumer,cpf)
+                self.sequential_search_rom_costumer(filename_costumer, cpf)
 
-            elif choice =="6":
+            elif choice == "6":
                 cpf = int(input("Input your CPF: "))
-                self.binary_search_costumer_csv(filename_costumer,cpf)
-            
+                self.binary_search_costumer_csv(filename_costumer, cpf)
+
             elif choice == "7":
                 self.sort_customers_by_name(filename_costumer)
 
@@ -470,8 +688,9 @@ class Store:
             elif choice == "3":
                 self.menu_order("order.csv")
 
-            elif choice == "4":     
-                print("Current store balance: ", self.calculate_total_final_value("order.csv"))
+            elif choice == "4":
+                print("Current store balance: ",
+                      self.calculate_total_final_value("order.csv"))
             elif choice == "0":
                 break
 
@@ -479,15 +698,16 @@ class Store:
                 print("Invalid choice. Please try again.")
 
 
-################################### funções relacionadas ao objeto cliente
+# funções relacionadas ao objeto cliente
 
-    #ordenação por cpf para busca binaria
-    def sort_customers_by_cpf(self,filename):
+    # ordenação por cpf para busca binaria
+
+    def sort_customers_by_cpf(self, filename):
         df = pd.read_csv(filename)
         df = df.sort_values(by=['Costumer CPF'])
         df.to_csv(filename, mode='w', index=False)
 
-    #busca binaria por CPF
+    # busca binaria por CPF
     def binary_search_costumer_csv(self, filename, cpf):
         self.sort_customers_by_cpf(filename)
         comp = 0
@@ -536,7 +756,8 @@ class Store:
             df.to_csv(filename_costumer, mode='a', index=False, header=False)
         else:
             df.to_csv(filename_costumer, mode='a', index=False)
-        print(f"Product '{costumer.name}' saved to '{filename_costumer}' successfully.")
+        print(
+            f"Product '{costumer.name}' saved to '{filename_costumer}' successfully.")
 
     # le arquivo de clientes, os imprimindo na tela
     def read_file_costumer(self, filename_costumer):
@@ -565,7 +786,7 @@ class Store:
         for chunk in pd.read_csv(filename, chunksize=chunksize):
             # Filtrar o chunk atual pelo CPF do cliente
             customer_chunk = chunk[chunk['Costumer CPF'] == cpf]
-            
+
             # Verificar se há clientes encontrados no chunk
             if not customer_chunk.empty:
                 # Retornar o primeiro cliente encontrado
@@ -582,15 +803,16 @@ class Store:
     # gera um numero 'len(costumer_names.txt)' de clientes para a loja [criação de dados]
     def gen_random_costumers(self):
         fake = Faker()
-        for line in range(80):
+        for line in range(1000000):
             address = fake.address()
             truncated_address = address[:12]
             area_code = fake.random_element(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27", "28", "31", "32", "33", "34",
-                "35", "37", "38", "41"]) 
-            number = fake.random_int(min=1000000, max=9999999) 
+                                             "35", "37", "38", "41"])
+            number = fake.random_int(min=1000000, max=9999999)
             formatted_phone_number = f"({area_code}){9}{number}"
 
-            var_clientes = self.Customer(fake.name(), truncated_address.replace(', ', '- '), formatted_phone_number, fake.unique.random_number(digits=11, fix_len=True))
+            var_clientes = self.Customer(fake.name(), truncated_address.replace(
+                ', ', '- '), formatted_phone_number, fake.unique.random_number(digits=11, fix_len=True))
             self.save_costumer_to_file(var_clientes, "costumer.csv")
 
     # retorna o cliente procurado por código por busca sequencial
@@ -605,7 +827,8 @@ class Store:
             if not result.empty:
                 found = True
                 elapsed_time = time.time() - start_time
-                print("Costumer CPF in", comp, "comparisons and", elapsed_time, "seconds:")
+                print("Costumer CPF in", comp, "comparisons and",
+                      elapsed_time, "seconds:")
                 print()
                 print(result)
                 return result
@@ -617,17 +840,17 @@ class Store:
         print("Total comparisons:", comp)
         print("Elapsed time:", elapsed_time, "seconds")
 
-    
     # ordena clientes por nome
+
     def sort_customers_by_name(self, filename_costumer):
         df = pd.read_csv(filename_costumer)
         df = df.sort_values(by=['Costumer Name'])
         df.to_csv(filename_costumer, mode='w', index=False)
 
-
-    ################################################# Funções relacionadas ao objeto Order
+    # Funções relacionadas ao objeto Order
 
     # realiza Order de dado cliente
+
     def place_order(self, orders_file, product_code, costumer_cpf, quantity):
         rand = random.randint(1, 1000)
 
@@ -641,7 +864,8 @@ class Store:
         if costumer_aux is None:
             customer = self.create_customer()
             self.save_costumer_to_file(customer, "costumer.csv")
-            costumer_aux = self.find_customer_by_cpf("costumer.csv", costumer_cpf)
+            costumer_aux = self.find_customer_by_cpf(
+                "costumer.csv", costumer_cpf)
 
         if product_aux is None:
             print("Couldn't find product!")
@@ -657,7 +881,8 @@ class Store:
         product_aux.quantity -= quantity
 
         df = pd.read_csv("products.csv")
-        df.loc[df["Product Code"] == product_code, "Quantity"] = product_aux.quantity
+        df.loc[df["Product Code"] == product_code,
+               "Quantity"] = product_aux.quantity
         df.to_csv("products.csv", index=False)
 
         data = {
@@ -674,9 +899,9 @@ class Store:
             df_order.to_csv(orders_file, mode="a", index=False)
 
         print(f"Order '{product_code}' saved to '{orders_file}' successfully.")
-    
 
-    # calcula o saldo da loja baseado na pilha de pedidos feitos 
+    # calcula o saldo da loja baseado na pilha de pedidos feitos
+
     def calculate_total_final_value(self, filename):
         try:
             df = pd.read_csv(filename)
@@ -685,7 +910,7 @@ class Store:
         except FileNotFoundError:
             print(f"File '{filename}' not found.")
             return None
-        
+
     def remove_order_from_file(self, filename, code):
         df = pd.read_csv(filename)
         df = df[df['Order Code'] != code]
@@ -703,7 +928,8 @@ class Store:
             if not result.empty:
                 found = True
                 elapsed_time = time.time() - start_time
-                print("Order Code in", comp, "comparisons and", elapsed_time, "seconds:")
+                print("Order Code in", comp, "comparisons and",
+                      elapsed_time, "seconds:")
                 print()
                 print(result)
                 return result
@@ -714,7 +940,7 @@ class Store:
 
         print("Total comparisons:", comp)
         print("Elapsed time:", elapsed_time, "seconds")
-    
+
     def binary_search_order(self, filename, code):
         self.sort_order_by_code(filename)
         comp = 0
@@ -754,230 +980,3 @@ class Store:
         df = pd.read_csv(filename)
         df = df.sort_values(by=['Order Code'])
         df.to_csv(filename, mode='w', index=False)
-
-    def generate_ordered_partitions(self, input_filename, output_filename, M):
-        # Leitura do arquivo CSV
-        df = pd.read_csv(input_filename)
-
-        # Variáveis de controle
-        partition_number = 1
-        reservatorio = []
-        array = []
-        A = 0
-        ultimo_indice = len(df) - 1
-        
-        for index, line in df.iterrows():
-        
-            new_line = line['Product Code']
-
-            if A < M:
-                    #AQUI VAI LER M REGISTRO
-                    array.append(new_line) 
-                    A += 1
-            else:
-
-                #Caso a memoria não está toda preenchida.
-                if len(array) != M: 
-                     
-                     # verifica se o valor gravado na partição é maior que a proxima linha
-                     if new_line < min_product_code:
-                        reservatorio.append(new_line)
-                        
-                        #Caso o reservatorio esteja cheio, vai colocar tudo na partição
-                        if len(reservatorio) == M:  
-                            #ORDENA RESERVATORIO
-                            array.sort()
-                            for a in array:
-                                #escreve no arquivo o reservatorio ordenado
-                                output_file.write(f"{a}\n")
-                            output_file.close()
-                            #transfere o reservatorio para a memoria
-                            array = reservatorio
-                            # zera o reservatorio
-                            reservatorio = []
-                            partition_number += 1 
-                     else:
-                        array.append(new_line)
-
-
-                else:
-                    # Pega o valor minimo
-                    min_product_code = min(array) 
-                    #Cria um novo arquivo
-                    output_filename = f"./partitions/{partition_number}.csv" 
-                    output_file = open(output_filename, "a")
-                    output_file.write(f"{min_product_code}\n")
-                    # Remove o valor minimo da memoria
-                    array.remove(min_product_code)
-
-                    # verifica se o valor gravado na partição é maior que a proxima linha
-                    if new_line < min_product_code:
-                        reservatorio.append(new_line)
-                    else:
-                        array.append(new_line)
-
-                    # VEEFICIANDO se o reservatório está cheio
-                    if len(reservatorio) == M:  
-                        #ORDENA RESERVATORIO
-                        array.sort()
-                        for a in array:
-                            #escreve no arquivo o reservatorio ordenado
-                            output_file.write(f"{a}\n")
-                        #transfere o reservatorio para a memoria
-                        array = reservatorio
-                        # zera o reservatorio
-                        reservatorio = []
-                        partition_number += 1
-
-        #Caso o arquivo acabe e tenha conteudo no reservatorio ou na memoria
-        if ultimo_indice == index:
-            # Caso tenha conteudo na memoria ---------------# 
-            array.sort()                                    #
-            for a in array:                                 #
-                output_file.write(f"{a}\n")                 #
-            #-----------------------------------------------#
-
-            #Caso tenha no reservatorio-------------------------------------------------#
-            if len(reservatorio) != 0:                                                  #  
-                reservatorio.sort()                                                     #
-                partition_number += 1                                                   #
-                # é preciso criar um novo arquivo, pois o reservatorio pode conter numeros menores que na partição#
-                output_filename = f"./partitions/{partition_number}.csv"   #
-                output_file = open(output_filename, "a")                                #
-                for b in reservatorio:                                                  #
-                    output_file.write(f"{b}\n")                                         #
-            #---------------------------------------------------------------------------#
-            output_file.close()
-
-
-    def merge_partitions(self, input_prefix, output_filename):
-        partition_number = 1
-        merged_records = []
-
-        while True:
-            try:
-                # Load the next partition
-                partition_file = f"{input_prefix}partition{partition_number}.csv"
-                with open(partition_file, "r") as file:
-                    partition_records = [int(line.strip()) for line in file.readlines()]
-                    merged_records.extend(partition_records)
-
-                partition_number += 1
-            except FileNotFoundError:
-                # No more partitions to merge, break the loop
-                break
-
-        # Sort the merged records
-        merged_records.sort()
-
-
-        # Save the merged records to the output file
-        with open(output_filename, "w") as output_file:
-            for record in merged_records:
-                output_file.write(str(record) + "\n")
-
-        print(f"Partições unidas e ordenadas no arquivo '{output_filename}'.")
-
-   
-    def intercalation_sort(self, input_folder, output_file):
-        input_files = [os.path.join(input_folder, file) for file in os.listdir(input_folder) if file.endswith(".csv")]
-        F = len(input_files)
-
-        if F < 2:
-            print("At least two partition files are required.")
-            return
-
-        output_partition = os.path.join(input_folder, "output_partition.csv")
-
-        while len(input_files) > 1:
-            partitions_to_merge = input_files[:F - 1]
-            remaining_files = input_files[F - 1:]
-
-            # Perform intercalation for F-1 partitions
-            with open(output_partition, 'w') as output:
-                heap = []
-
-                # Open F-1 input partitions and initialize the heap with the first integer from each
-                for file in partitions_to_merge:
-                    with open(file, 'r') as f:
-                        record = f.readline().strip()
-                        if record:
-                            heapq.heappush(heap, (int(record), f))
-
-                # Merge the integers and write to the output partition
-                while heap:
-                    try:
-                        record, file = heapq.heappop(heap)
-                        output.write(str(record) + '\n')
-
-                        next_record = file.readline().strip()
-                        if next_record is not None:
-                            heapq.heappush(heap, (int(next_record), file))
-                    except ValueError:
-                        # Ignore the ValueError when reaching the end of the file
-                        pass
-
-                # Remove merged partitions and add the newly created partition to the list
-                for file in partitions_to_merge:
-                    os.remove(file)
-
-                shutil.move(output_partition, input_files[-1])
-
-                # Update the list of input files for the next iteration
-                input_files = remaining_files + [input_files[-1]]
-
-            # Rename the final partition to the output file
-            shutil.move(input_files[0], output_file)
-
-        # Function to read a line from each input file
-    def read_line(self, files, i):
-        # Try to read a line from file i
-        try:
-            # Read the line and convert it to an integer
-            value = int(files[i].readline())
-            # Return the value and the index of the file
-            return (value, i)
-        # If an exception occurs (e.g., end of file)
-        except:
-            # Return None
-            return None
-
-    # Function to write a line to the output file
-    def write_line(self, file, value, i):
-        # Write the value and the index of the file separated by a comma
-        file.write(f"{value},{i}\n")
-
-    # Function to merge the sorted partitions
-    def merge_partitions(self, input_folder, output_name):
-        file_names = [os.path.join(input_folder, file) for file in os.listdir(input_folder) if file.endswith(".csv")]
-        num_files = len(file_names)
-        # Open the input files in read mode
-        files = [open(name, "r") for name in file_names]
-        # Open the output file in write mode
-        output_file = open(output_name, "w")
-        # Read the first line from each input file
-        lines = [self.read_line(files, i) for i in range(num_files)]
-        # Remove the None values from the list
-        lines = [x for x in lines if x is not None]
-        # While the list is not empty
-        while lines:
-            # Find the smallest value in the list and its corresponding file index
-            smallest = min(lines)
-            value, i = smallest
-            # Write the smallest value to the output file
-            self.write_line(output_file, value, i)
-            # Read the next line from the file corresponding to the smallest value
-            next_line = self.read_line(files, i)
-            # If the next value is not None
-            if next_line is not None:
-                # Update the list with the new value and index
-                lines[lines.index(smallest)] = next_line
-            # Otherwise
-            else:
-                # Remove the value and index from the list
-                lines.remove(smallest)
-        # Close the input and output files
-        for file in files:
-            file.close()
-        output_file.close()
-        print("Sorted file has been saved as: ", output_name)

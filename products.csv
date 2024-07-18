@@ -1,82 +1,83 @@
-Product Name,Product Code,Quantity,PriceClarinet,0,12,651.78
-Mellotron,44,10,843.88,,,
-Bassoon,40,4,353.47,,,
-Flute,38,15,57.36,,,
-Steel pan,59,9,684.38,,,
-Violin Strings,33,0,585.81,,,
-Mandolin,32,20,419.26,,,
-Pick,28,10,203.31,,,
-Bass drum,57,13,49.66,,,
-Pandeiro,53,1,242.94,,,
-Tuner,52,1,337.5,,,
-Cable P10,25,2,183.15,,,
-Guitar,18,14,167.06,,,
-Amplifier,45,14,37.63,,,
-Guitar Strings,70,0,45.17,,,
-Sitar,60,2,521.51,,,
-Vibraphone,62,14,414.98,,,
-Marimba,11,16,818.57,,,
-Shamisen,31,0,640.49,,,
-Piano,14,13,825.49,,,
-Pan flute,34,12,898.84,,,
-Zither,73,16,666.5,,,
-Violin,23,20,440.92,,,
-Accordion,30,0,856.04,,,
-Flute,22,9,276.66,,,
-Trumpet,5,16,837.1,,,
-PedalBoard,7,2,942.69,,,
-Triangle,3,19,273.55,,,
-Xylophone,13,14,79.1,,,
-Acoustic Guitar Strings,17,14,376.16,,,
-Steel drum,19,13,372.4,,,
-Drum kit,79,0,444.58,,,
-Bongo,47,13,160.14,,,
-Banjo,66,8,967.22,,,
-Cowbell,2,9,759.46,,,
-Dulcimer,41,2,782.22,,,
-Hang,37,2,921.54,,,
-Hurdy-gurdy,8,19,37.73,,,
-Kalimba,64,3,456.73,,,
-Bamboo flute,81,2,237.84,,,
-Glockenspiel,27,2,145.02,,,
-Ukulele Strings,61,13,472.42,,,
-Kazoo,20,16,792.3,,,
-Sitar,55,4,762.43,,,
-Sax,46,1,28.4,,,
-Ukulele,48,2,569.29,,,
-Oboe,35,3,540.68,,,
-Trombone,68,8,551.84,,,
-Harpsichord,78,6,971.76,,,
-Tabla,69,10,113.37,,,
-Eletric Guitar,49,14,629.49,,,
-Pandero,29,20,715.37,,,
-Saxophone,74,19,634.52,,,
-Jaw harp,75,12,417.85,,,
-Djembe,42,11,576.67,,,
-Piano Strings,80,20,43.06,,,
-Bouzouki,16,5,841.74,,,
-Tambourine,6,10,748.04,,,
-Didgeridoo,1,17,281.05,,,
-Cello,24,3,847.98,,,
-Sousaphone,56,8,95.12,,,
-Drum,50,10,38.29,,,
-Viola,71,0,930.0,,,
-Concertina,15,1,735.82,,,
-Pedal,58,15,656.67,,,
-Accordion,39,19,515.31,,,
-Harmonica,43,6,255.22,,,
-Tamboura,36,17,152.21,,,
-Keyboard,51,1,680.79,,,
-Castanets,77,13,156.28,,,
-French horn,72,14,708.52,,,
-Balalaika,10,2,423.8,,,
-Koto,76,16,356.65,,,
-Maraca,26,9,680.89,,,
-Handpan,63,0,970.74,,,
-Harp,21,13,41.71,,,
-Bassoon,54,17,522.03,,,
-Ocarina,67,4,476.94,,,
-Theremin,9,19,439.85,,,
-Conga,4,1,954.05,,,
-Udu drum,12,12,245.36,,,
-Bagpipes,65,19,492.62,,,
+Product Name,Product Code,Quantity,Price
+Clarinet,0,12,651.78
+Didgeridoo,1,17,281.05
+Cowbell,2,9,759.46
+Triangle,3,19,273.55
+Conga,4,1,954.05
+Trumpet,5,16,837.1
+Tambourine,6,10,748.04
+PedalBoard,7,2,942.69
+Hurdy-gurdy,8,19,37.73
+Theremin,9,19,439.85
+Balalaika,10,2,423.8
+Marimba,11,16,818.57
+Udu drum,12,12,245.36
+Xylophone,13,14,79.1
+Piano,14,13,825.49
+Concertina,15,1,735.82
+Bouzouki,16,5,841.74
+Acoustic Guitar Strings,17,14,376.16
+Guitar,18,6,167.06
+Steel drum,19,13,372.4
+Kazoo,20,16,792.3
+Harp,21,13,41.71
+Flute,22,7,276.66
+Violin,23,20,440.92
+Cello,24,3,847.98
+Cable P10,25,2,183.15
+Maraca,26,9,680.89
+Glockenspiel,27,2,145.02
+Pick,28,10,203.31
+Pandero,29,20,715.37
+Accordion,30,0,856.04
+Shamisen,31,0,640.49
+Mandolin,32,20,419.26
+Violin Strings,33,0,585.81
+Pan flute,34,12,898.84
+Oboe,35,3,540.68
+Tamboura,36,17,152.21
+Hang,37,2,921.54
+Flute,38,15,57.36
+Accordion,39,19,515.31
+Bassoon,40,4,353.47
+Dulcimer,41,2,782.22
+Djembe,42,11,576.67
+Harmonica,43,6,255.22
+Mellotron,44,10,843.88
+Amplifier,45,14,37.63
+Sax,46,1,28.4
+Bongo,47,13,160.14
+Ukulele,48,2,569.29
+Eletric Guitar,49,14,629.49
+Drum,50,10,38.29
+Keyboard,51,1,680.79
+Tuner,52,1,337.5
+Pandeiro,53,1,242.94
+Bassoon,54,17,522.03
+Sitar,55,4,762.43
+Sousaphone,56,8,95.12
+Bass drum,57,13,49.66
+Pedal,58,15,656.67
+Steel pan,59,9,684.38
+Sitar,60,2,521.51
+Ukulele Strings,61,13,472.42
+Vibraphone,62,14,414.98
+Handpan,63,0,970.74
+Kalimba,64,3,456.73
+Bagpipes,65,19,492.62
+Banjo,66,8,967.22
+Ocarina,67,4,476.94
+Trombone,68,8,551.84
+Tabla,69,10,113.37
+Guitar Strings,70,0,45.17
+Viola,71,0,930.0
+French horn,72,14,708.52
+Zither,73,16,666.5
+Saxophone,74,19,634.52
+Jaw harp,75,12,417.85
+Koto,76,16,356.65
+Castanets,77,13,156.28
+Harpsichord,78,6,971.76
+Drum kit,79,0,444.58
+Piano Strings,80,20,43.06
+Bamboo flute,81,2,237.84
